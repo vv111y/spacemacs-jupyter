@@ -40,33 +40,37 @@
       (use-package jupyter
         :defer t
         :init
-        (progn
+        ;; (progn
           (spacemacs/set-leader-keys
-            "aja" 'jupyter-repl-associate-buffer
-            "ajc" 'jupyter-connect-repl
+            "ajj" 'jupyter-run-repl
             "ajr" 'jupyter-run-repl
-            "ajs" 'jupyter-server-list-kernels
-            )
-          (spacemacs/set-leader-keys-for-major-mode 'jupyter-repl-mode
-            "i" 'jupyter-inspect-at-point
-            "l" 'jupyter-load-file
-            "s" 'jupyter-repl-scratch-buffer
-            "I" 'jupyter-repl-interrupt-kernel
-            "R" 'jupyter-repl-restart-kernel))
+            "ajc" 'jupyter-connect-repl)
+          ;; (spacemacs|add-company-backends :backends company-capf :modes jupyter-repl-mode))
         :config
         (progn
-          (when (eq dotspacemacs-editing-style 'vim)
-            (evil-define-key '(insert normal) jupyter-repl-mode-map
-              (kbd "C-j") 'jupyter-repl-history-next
-              (kbd "C-k") 'jupyter-repl-history-previous
-              (kbd "C-l") 'jupyter-repl-clear-cells
-              (kbd "M-j") 'jupyter-repl-forward-cell
-              (kbd "M-k") 'jupyter-repl-backward-cell
-              (kbd "C-s") 'jupyter-repl-scratch-buffer
-              (kbd "C-R") 'jupyter-repl-history-next-matching
-              (kbd "C-r") 'jupyter-repl-history-previous-matching))
-          ))
+          (evilified-state-evilify-map 'jupyter-repl-mode-map
+            :mode jupyter-repl-mode)
 
+          (spacemacs/declare-prefix-for-mode 'jupyter-repl-mode
+            "mf" "file")
+          (spacemacs/declare-prefix-for-mode 'jupyter-repl-mode
+            "me" "eval")
+          (spacemacs/declare-prefix-for-mode 'jupyter-repl-mode
+            "mh" "history")
+          ;; TODO not working
+          (spacemacs/set-leader-keys-for-major-mode 'jupyter-repl-mode
+            ;; "," 'jupyter-eval-line-or-region ;; probably these functions should be called from source code
+            ;; "ee" 'jupyter-eval-line-or-region
+            "ed" 'jupyter-eval-defun
+            "eb" 'jupyter-eval-buffer
+            "fl" 'jupyter-load-file
+            "fs" 'jupyter-repl-scratch-buffer
+            "fb" 'jupyter-repl-pop-to-buffer
+            "kr" 'jupyter-repl-restart-kernel
+            "hn"  'jupyter-repl-history-next
+            "hN"  'jupyter-repl-history-previous
+            "i" 'jupyter-inspect-at-point
+            "sb" 'jupyter-repl-pop-to-buffer)))
     (message "jupyter was not found in your path, jupyter is not loaded")))
 
 (defun jupyter/post-init-company ()
